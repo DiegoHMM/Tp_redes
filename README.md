@@ -26,26 +26,26 @@ e o número de solicitações que ele enviará ao servidor. Ao receber esta noti
 uma mensagem do servidor.
 * Ao receber a mensagem do servidor para realizar algum processamento de uma string deve-se:
 
-... 1. Verificar se a string não é vazia e se contém caracteres alfa numéricos.
+⋅⋅⋅1. Verificar se a string não é vazia e se contém caracteres alfa numéricos.
 
-... 2. Se a string estiver no formato correto, o servidor deve retornar como resultado a quantidade
+⋅⋅⋅2. Se a string estiver no formato correto, o servidor deve retornar como resultado a quantidade
 de vogais, consoantes e n´umeros da string enviada. Por exemplo: Pedro5: C=3,V=2,N=5.
 
-... 3. Se a string não possuir caracteres alfa numéricos, o servidor deve indicar ao cliente uma
+⋅⋅⋅3. Se a string não possuir caracteres alfa numéricos, o servidor deve indicar ao cliente uma
 situação de erro, enviando uma mensagem avisando ao servidor que não é posível processar
 a string.
 
 * Nota-se que o cliente pode receber três tipos de mensagens:
 
-... 1. Resposta de uma solicitação enviada ao servidor: neste caso, ele deve imprimir o resultado
+⋅⋅⋅1. Resposta de uma solicitação enviada ao servidor: neste caso, ele deve imprimir o resultado
 na tela e enviar uma nova solicitação ao servidor. O cliente deve receber como entrada
 um conjunto de mensagens, a quantidade de mensagens definidas deve estar contida na
 primeira mensagem enviada ao servidor.
 
-... 2. Solicitação de processamento de uma string: neste caso, o cliente responde o servidor e
+⋅⋅⋅2. Solicitação de processamento de uma string: neste caso, o cliente responde o servidor e
 aguarda uma nova mensagem.
 
-... 3. Notificação de encerramento: neste caso, todas as solicitações foram atendidas e o cliente
+⋅⋅⋅3. Notificação de encerramento: neste caso, todas as solicitações foram atendidas e o cliente
 pode encerrar sua execução.
 As informações que serão enviadas pelos clientes quantos as que serão salvas (saída) devem seguir o 
 padrão de dois arquivos em anexo. Os arquivos são exemplos que deverão ser rigorosamente seguidos 
