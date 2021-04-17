@@ -1,0 +1,14 @@
+//Modelo de arquivo de testes. 
+//Implemente seu programa de forma que seja desconsiderado 
+//nesse arquivo quaisquer linhas que iniciem com "//". Isso � coment�rio
+
+//N�mero de opera��es a serem lidas
+4
+
+//imediatamente as opera��es dever�o ser lidas. Cada entrada dever� ser inserida em uma linha distinta. 
+//Duas entradas em uma �nica linha ser�o consideradas como entrada �nica. Isso pode provocar um erro.
+
+abc
+j�k3
+d23ee
+*-?

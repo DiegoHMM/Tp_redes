@@ -3,6 +3,7 @@
 
 import socket
 import sys
+from main import contador_de_letras
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
