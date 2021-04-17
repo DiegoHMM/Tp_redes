@@ -1,96 +1,105 @@
-#!/usr/bin/python
-# Based on: https://pymotw.com/2/socket/tcp.html
-
 import socket
-import sys
-import server_info
-import re
-
+import threading
 from main import contador_de_letras
+from main import le_arquivo
 
 
-# Create a TCP/IP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+class TcpClient(object):
 
-# Connect the socket to the port where the server is listening
-server_address = (server_info.ip, server_info.port)
-print('connecting to %s port %s' % server_address)
-sock.connect(server_address)
-buffer_size = 32
+    def __init__(self, addr):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.addr = addr
+
+    def create_client(self):
+        self.sock.connect(self.addr)
+        print(self.sock.recv(1024).decode("UTF-8"))
+
+        l = le_arquivo("modelo_entrada")
+
+        print("please enter message(enter 'exit' to quit the chat)")
+
+        for i, ele in enumerate(l):
+            
+            #ENVIA MENSAGEM CRUA
+            message = '-'+str(l[i])
+            if (message == "exit"):
+                print('quit from the chatroom.....')
+                break
+            
+            self.sock.send(message.encode("UTF-8"))
+            #print(message)
+            
+            resposta_servidor = self.sock.recv(1024).decode("UTF-8")
+            
+            if resposta_servidor.startswith('-'):
+                resposta_servidor.replace('-','')
+                palavra, cont_consoante, cont_vogal, cont_numeros = contador_de_letras(resposta_servidor)
+                consoante = "C=" + str(cont_consoante)
+                vogal = "V=" + str(cont_vogal)
+                numero = "N=" + str(cont_numeros)
+                if cont_consoante == 0 and cont_vogal == 0 and cont_numeros == 0:
+                    resposta_Final  = '+'+'erro'
+                else:
+                    resposta_Final = '+'+consoante+';'+vogal+';'+numero
+
+                print(resposta_Final)
+                print(palavra)
+                self.sock.send(resposta_Final.encode("UTF-8"))
+
+            # recebi a mensagem final com contadores''
+            else:
+                print(' ')
+                #print(resposta_servidor.replace('+',''))
+                
+            #print("response is >>>" + self.sock.recv(1024).decode("UTF-8"))
 
 
+    def thread_run(self):
+        lock = threading.Lock()
+        try:
+            lock.acquire()
+            self.create_client()
+        finally:
+            lock.release()
 
-#LE O ARQUIVO
-f = open("modelo_entrada.txt", "r")
-l = []
-for line in f:
-    
-    if(len(line) >= 2):
-        if line[0]+line[1] == '//':
-            print(" ")
-        elif line != '\n':
-            line = line.replace('\n','')
-            line = re.sub('[^a-zA-Z0-9\n\.]', ' ', line)
-            l.append(line)
-    elif line != '\n':
-        line = re.sub('[^a-zA-Z0-9\n\.]', ' ', line)
-        l.append(line)
 
-runs = int(l[0])
+if __name__ == '__main__':
+    client = TcpClient(('127.0.0.1', 8089))
+    client.create_client()
 
 '''
-if len(sys.argv) > 1:
-	runs = int(sys.argv[1])
-else:
-	runs = 1
-'''
-print(l)
-try:
-    for i in range(runs):
+import socket
+import threading
 
-        message = l[i]
+class TcpClient(object):
 
-        # Send data
-        #print(' Sending: "%s"' % message)
-        sock.sendall(str.encode(message))
+    def __init__(self, addr):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.addr = addr
 
-        # Look for the response
-        amount_received = 0
-        amount_expected = len(message)
+    def create_client(self):
+        self.sock.connect(self.addr)
+        print(self.sock.recv(1024).decode("UTF-8"))
+        print("please enter message(enter 'exit' to quit the chat)")
+        while True:
+            message = input(">>>")
+            if (message == "exit"):
+                print('quit from the chatroom.....')
+                break
+            self.sock.send(message.encode("UTF-8"))
+            print("response is>>>" + self.sock.recv(1024).decode("UTF-8"))
 
-        while amount_received < amount_expected:
-            data = sock.recv(buffer_size)
-            amount_received += len(data)
-            print(contador_de_letras(data))
-            #print('Received: "%s"' % data)
-        
-
-finally:
-    print('closing socket')
-    sock.close()
+    def thread_run(self):
+        lock = threading.Lock()
+        try:
+            lock.acquire()
+            self.create_client()
+        finally:
+            lock.release()
 
 
-'''
-try:
-    for i in range(runs):
+if __name__ == '__main__':
+    client = TcpClient(('127.0.0.1', 8089))
+    client.create_client()
 
-        message = l[i]
-
-        # Send data
-        #message = 'Hello TCP Server {}'.format(i + 1)
-        print(' Sending: "%s"' % message)
-        sock.sendall(str.encode(message))
-
-        # Look for the response
-        amount_received = 0
-        amount_expected = len(message)
-
-        while amount_received < amount_expected:
-            data = sock.recv(buffer_size)
-            amount_received += len(data)
-            print('Received: "%s"' % data)
-
-finally:
-    print('closing socket')
-    sock.close()
 '''

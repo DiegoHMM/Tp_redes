@@ -1,41 +1,61 @@
-#!/usr/bin/python
-# Based on: https://pymotw.com/2/socket/tcp.html
 
 import socket
-import sys
-from main import contador_de_letras
+import threading
+import time
 
-# Create a TCP/IP socket
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+class TcpServer(object):
 
-# Bind the socket to the port
-server_address = ('localhost', 5001)
-print('starting up on %s port %s' % server_address)
-sock.bind(server_address)
+    list_addr = []
 
-# Listen for incoming connections
-sock.listen(1)
-
-while True:
-    # Wait for a connection
-    print('waiting for a connection')
-    connection, client_address = sock.accept()
-
-    try:
-        print('connection from', client_address)
-
-        # Receive the data in small chunks and retransmit it
+    def tcplink(self, sock, addr):
+        #print('Accept new connection from %s:%s...' % addr)
+        sock.send("Welcome to chatroom!".encode("UTF-8"))
         while True:
-            data = connection.recv(16)
-            print(data)
-            #print(sys.stderr, 'received "%s"' % data)
-            if data:
-                #print(sys.stderr, 'sending data back to the client')
-                connection.sendall(data)
-            else:
-                print('no more data from', client_address)
-                break
+            try:
+                data = sock.recv(2048)
+                time.sleep(1)
+                if data:
+                    '''
+                    #É PORQUE TENHO QUE ENVIAR PARA PROCESSAMENTO
+                    if not str(data.decode("UTF-8")).startswith('-'):
+                        resp = '-'+data.decode("UTF-8")
+                    #É PORQUE O DADO DE SAIDA ESTA PRONTO
+                    elif str(data.decode("UTF-8")).startswith('+'):
+                        resp = str(data.decode("UTF-8")).replace('+','')
+                    '''
 
-    finally:
-        # Clean up the connection
-        connection.close()
+                    resp = str(data.decode("UTF-8"))
+                else: 
+                    break
+                print(resp)
+                sock.send(resp.encode("UTF-8"))
+            except ConnectionResetError as cre:
+                print('error', cre)
+                break
+        sock.close()
+        print('Connection from %s:%s closed.' % addr)
+
+    def create_sokcet(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        s.bind(("127.0.0.1", 8089))
+        s.listen(2)
+        print("Waiting for connection...")
+
+        while True:
+
+            sock, addr = s.accept()
+            print("seccessful connect!")
+            self.list_addr.append([sock,addr])
+            t = threading.Thread(target=self.tcplink, args=(sock, addr))
+            t.start()
+
+
+if __name__ == '__main__':
+    server = TcpServer()
+    server.create_sokcet()
+
+
+
+
+
