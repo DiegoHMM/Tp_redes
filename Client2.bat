@@ -1,3 +1,3 @@
 @echo off
-python Client2.py  \p arg=modelo_entrada %*
+python Client.py  modelo_entrada %*
 pause
