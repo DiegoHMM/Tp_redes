@@ -85,15 +85,6 @@ class TcpClient(object):
                     self.sock.send(resposta_Final.encode("UTF-8"))
 
 
-    def thread_run(self):
-        lock = threading.Lock()
-        try:
-            lock.acquire()
-            self.create_client()
-        finally:
-            lock.release()
-
-
 if __name__ == '__main__':
     client = TcpClient(('localhost', 4001))
     client.create_client()
