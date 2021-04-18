@@ -20,7 +20,7 @@ class TcpServer(object):
             try:
                 data = sock.recv(1024)
 
-                #time.sleep(0.5)
+                time.sleep(0.2)
                 if data.decode("UTF-8").startswith('*'):
                     data = data.decode("UTF-8")
                     data = str(data).replace('*','')
