@@ -17,19 +17,24 @@ class TcpClient(object):
 
 
         if len(sys.argv) > 1: #cliente de requisicao
-            arquivo = open("texto.txt", "w")
+            arquivo = open("saida.txt", "w")
             arquivo.close()
-            # ---------------------------------------       client one ----------------------------------------------------------
+            # ---------------------------------------------------client one ----------------------------------------------------------
             print(sys.argv[1])
             l = le_arquivo(str(sys.argv[1]))
 
-            for i, ele in enumerate(l):
-                
-                message = '-'+str(l[i])
+            qnt_entradas = '*'+l[0]
+            self.sock.send(qnt_entradas.encode("UTF-8"))
 
-                print("Enviando para o servidor")
+            iter_messages = iter(l)
+            next(iter_messages)
+            for ele in iter_messages:
+                
+                message = '-'+str(ele)
+
+                print("Enviando dado CRU Para o Servidor")
                 print(message)
-                print("---------------------")
+                print('\n')
                 self.sock.send(message.encode("UTF-8"))
 
                 
@@ -38,19 +43,30 @@ class TcpClient(object):
                     resposta_servidor = self.sock.recv(1024).decode("UTF-8")
                     if resposta_servidor:
                         arquivo = open("saida.txt", "a")
+                        print("Recebendo Resposta Final do Servidor'")
                         print(resposta_servidor)
+                        print('\n')
                         resposta_servidor = resposta_servidor.replace('+','')
                         
                         arquivo.write(resposta_servidor+'\n')
-                        break
+                        break   
                     print(resposta_servidor)
-            
              # -------------------------------------------------------------------------------------------------
 
         else: #cliente processador
             #-------------------------------------------------------client dois ----------------------------------------
             while True:
                 resposta_servidor = self.sock.recv(1024).decode("UTF-8")
+                print("Recebendo do Servidor para Tratamento")
+                print(resposta_servidor)
+                print('\n')
+
+                if(resposta_servidor == 'exit'):
+                    print("Fim do processamento")
+                    print("Encerrando client...")
+                    self.sock.send(resposta_servidor.encode("UTF-8"))
+                    self.sock.close()
+                    break
 
                 if resposta_servidor.startswith('-'):
                     resposta_servidor.replace('-','')
@@ -63,8 +79,11 @@ class TcpClient(object):
                     else:
                         resposta_Final = '+'+consoante+';'+vogal+';'+numero
 
+                    print("Enviando dado tratado para Servidor")
                     print(resposta_Final)
+                    print('\n')
                     self.sock.send(resposta_Final.encode("UTF-8"))
+
 
     def thread_run(self):
         lock = threading.Lock()
