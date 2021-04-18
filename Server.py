@@ -63,13 +63,6 @@ class TcpServer(object):
                 
             except ConnectionResetError as cre:
                 break
-    '''
-        self.list_addr[1][0].close()
-        self.list_addr[0][0].close()
-        print('Closed'+ str(self.list_addr[1][0]))
-        print(str(sock))
-    '''
-
 
     def create_sokcet(self):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -90,11 +83,6 @@ class TcpServer(object):
                 t.start()
             except:
                 print("Encerrando Servidor! ...")
-            
-            
-            
-            
-
 
 if __name__ == '__main__':
     server = TcpServer()

@@ -19,7 +19,6 @@ class TcpClient(object):
         if len(sys.argv) > 1: #cliente de requisicao
             arquivo = open("saida.txt", "w")
             arquivo.close()
-            # ---------------------------------------------------client one ----------------------------------------------------------
             print(sys.argv[1])
             l = le_arquivo(str(sys.argv[1]))
 
@@ -51,10 +50,8 @@ class TcpClient(object):
                         arquivo.write(resposta_servidor+'\n')
                         break   
                     print(resposta_servidor)
-             # -------------------------------------------------------------------------------------------------
 
-        else: #cliente processador
-            #-------------------------------------------------------client dois ----------------------------------------
+        else:
             while True:
                 resposta_servidor = self.sock.recv(1024).decode("UTF-8")
                 print("Recebendo do Servidor para Tratamento")
