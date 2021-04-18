@@ -1,7 +1,7 @@
 import socket
 import threading
-from main import contador_de_letras
-from main import le_arquivo
+from utils import contador_de_letras
+from utils import le_arquivo
 import sys
 
 
@@ -22,7 +22,6 @@ class TcpClient(object):
 
             arquivo = open("saida.txt", "w")
             arquivo.close()
-            print(sys.argv[1])
             l = le_arquivo(str(sys.argv[1]))
 
             qnt_entradas = '*'+l[0]

@@ -21,7 +21,7 @@ def contador_de_letras(palavra):
 
 
 def le_arquivo(nome_arquivo):
-    f = open(nome_arquivo+'.txt', "r")
+    f = open('Entradas/'+nome_arquivo+'.txt', "r")
     l = []
     for line in f:
         
