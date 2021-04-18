@@ -13,15 +13,8 @@ class TcpServer(object):
                 data = sock.recv(1024)
 
                 time.sleep(1)
-                '''
-                if data:
-                    
-                    print("Recebendo do cliente:")
-                    print(data)
-                    print('----------------------')
-                    resp = str(data.decode("UTF-8"))
-                '''
-            
+
+
                 if data.decode("UTF-8").startswith('-'):
                     self.list_addr[0][0].send(data)
                 elif data.decode("UTF-8").startswith('+'):
