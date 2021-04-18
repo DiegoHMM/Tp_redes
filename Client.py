@@ -10,13 +10,16 @@ class TcpClient(object):
     def __init__(self, addr):
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.addr = addr
+        self.c_entrada = '$'
+        self.c_processo = '#'
         
 
     def create_client(self):
         self.sock.connect(self.addr)
 
+        if len(sys.argv) > 1:
+            self.sock.send(self.c_entrada.encode("UTF-8"))
 
-        if len(sys.argv) > 1: #cliente de requisicao
             arquivo = open("saida.txt", "w")
             arquivo.close()
             print(sys.argv[1])
@@ -52,6 +55,7 @@ class TcpClient(object):
                     print(resposta_servidor)
 
         else:
+            self.sock.send(self.c_processo.encode("UTF-8"))
             while True:
                 resposta_servidor = self.sock.recv(1024).decode("UTF-8")
                 print("Recebendo do Servidor para Tratamento")
