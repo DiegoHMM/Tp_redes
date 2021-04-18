@@ -64,14 +64,16 @@ class TcpServer(object):
                 if(self.qnt_entradas*2 == self.count_entradas):
                     exit_socket = "exit"
                     for i in self.list_addr_processo:
-                        i[0].send(exit_socket.encode("UTF-8"))
+                        try:
+                            i[0].send(exit_socket.encode("UTF-8"))
+                        except:
+                            pass
                     self.exit_flag = True
                     if not self.closed:
                         self.closed = True
                         self.s.close()
                         break
                     
-                
             except ConnectionResetError as cre:
                 break
 
@@ -83,7 +85,6 @@ class TcpServer(object):
         print("Waiting for connection...")
 
         while True:
-            
             if self.exit_flag:
                 break
             try:
