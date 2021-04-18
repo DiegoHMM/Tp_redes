@@ -12,4 +12,3 @@ abc
 j°k3
 d23ee
 *-?
-exit

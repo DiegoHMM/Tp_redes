@@ -9,26 +9,25 @@ class TcpServer(object):
 
     def tcplink(self, sock, addr):
         #print('Accept new connection from %s:%s...' % addr)
-        sock.send("Welcome to chatroom!".encode("UTF-8"))
         while True:
             try:
-                data = sock.recv(2048)
-                time.sleep(1)
-                if data:
-                    '''
-                    #É PORQUE TENHO QUE ENVIAR PARA PROCESSAMENTO
-                    if not str(data.decode("UTF-8")).startswith('-'):
-                        resp = '-'+data.decode("UTF-8")
-                    #É PORQUE O DADO DE SAIDA ESTA PRONTO
-                    elif str(data.decode("UTF-8")).startswith('+'):
-                        resp = str(data.decode("UTF-8")).replace('+','')
-                    '''
+                data = sock.recv(1024)
 
+                time.sleep(1)
+                '''
+                if data:
+                    
+                    print("Recebendo do cliente:")
+                    print(data)
+                    print('----------------------')
                     resp = str(data.decode("UTF-8"))
-                else: 
-                    break
-                print(resp)
-                sock.send(resp.encode("UTF-8"))
+                '''
+            
+                if data.decode("UTF-8").startswith('-'):
+                    self.list_addr[0][0].send(data)
+                elif data.decode("UTF-8").startswith('+'):
+                    self.list_addr[1][0].send(data)
+
             except ConnectionResetError as cre:
                 print('error', cre)
                 break
@@ -38,7 +37,7 @@ class TcpServer(object):
     def create_sokcet(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        s.bind(("127.0.0.1", 8089))
+        s.bind(("localhost", 4001))
         s.listen(2)
         print("Waiting for connection...")
 
